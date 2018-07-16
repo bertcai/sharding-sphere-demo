@@ -14,7 +14,7 @@ public class DataSourceUtil {
         BasicDataSource result = new BasicDataSource();
         result.setDriverClassName(com.mysql.cj.jdbc.Driver.class.getName());
         result.setUrl(String.format("jdbc:mysql://%s:%s/%s?useSSL=false&characterEncoding=UTF-8" +
-                "&serverTimezone=GMT", HOST, port, dataSourceName));
+                "&serverTimezone=GMT&allowPublicKeyRetrieval=true", HOST, port, dataSourceName));
         result.setUsername(username);
         result.setPassword(password);
         return result;

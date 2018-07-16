@@ -70,8 +70,8 @@ public class TestShardingSphere {
     private static Map<String, DataSource> createDataSourceMap() {
         Map<String, DataSource> result = new HashMap<>();
         result.put("demo_ds_master", DataSourceUtil.createDataSource("demo_ds_master",3300,"root","admin"));
-        result.put("demo_ds_slave_0", DataSourceUtil.createDataSource("demo_ds_slave_0",3301,"root",""));
-        result.put("demo_ds_slave_1", DataSourceUtil.createDataSource("demo_ds_slave_1",3302,"root",""));
+        result.put("demo_ds_slave_0", DataSourceUtil.createDataSource("demo_ds_master",3302,"root",""));
+        result.put("demo_ds_slave_1", DataSourceUtil.createDataSource("demo_ds_master",3303,"root",""));
         return result;
     }
 }
