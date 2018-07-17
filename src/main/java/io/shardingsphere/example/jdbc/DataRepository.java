@@ -4,9 +4,9 @@ import io.shardingsphere.core.api.HintManager;
 
 import javax.sql.DataSource;
 import java.sql.*;
-import java.util.concurrent.TimeUnit;
 
 public class DataRepository {
+
     private final DataSource dataSource;
 
     public DataRepository(final DataSource dataSource) {
@@ -16,7 +16,6 @@ public class DataRepository {
     public void demo() throws SQLException {
         createTable();
         insertData();
-        waitSync(1);
         System.out.println("1.Query with EQUAL--------------");
         queryWithEqual();
         System.out.println("2.Query with IN--------------");
@@ -36,6 +35,8 @@ public class DataRepository {
     private void insertData() throws SQLException {
         for (int i = 1; i < 10; i++) {
             long orderId = insertAndGetGeneratedKey("INSERT INTO t_order (user_id, status) VALUES (10, 'INIT')");
+//            execute("INSERT INTO t_order (user_id, status) VALUES (10, 'INIT')");
+//            execute("INSERT INTO t_order (user_id, status) VALUES (11, 'INIT')");
             execute(String.format("INSERT INTO t_order_item (order_id, user_id) VALUES (%d, 10)", orderId));
             orderId = insertAndGetGeneratedKey("INSERT INTO t_order (user_id, status) VALUES (11, 'INIT')");
             execute(String.format("INSERT INTO t_order_item (order_id, user_id) VALUES (%d, 11)", orderId));
@@ -59,14 +60,11 @@ public class DataRepository {
 
     private void queryWithEqual() throws SQLException {
         String sql = "SELECT i.* FROM t_order o JOIN t_order_item i ON o.order_id=i.order_id WHERE o.user_id=?";
-        String sql2 = "SELECT * FROM t_order";
         try (
                 Connection connection = dataSource.getConnection();
-                Statement s = connection.createStatement();
                 PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, 10);
             printQuery(preparedStatement);
-
         }
     }
 
@@ -105,26 +103,16 @@ public class DataRepository {
 
     private void dropTable() throws SQLException {
         execute("DROP TABLE t_order_item");
-
         execute("DROP TABLE t_order");
-
     }
 
     private void execute(final String sql) throws SQLException {
         try (
                 Connection connection = dataSource.getConnection();
                 Statement statement = connection.createStatement()) {
+            System.out.println(sql);
             statement.execute(sql);
         }
     }
-
-    private void waitSync(int time) {
-        try {
-            TimeUnit.SECONDS.sleep(time);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
-
 }
+

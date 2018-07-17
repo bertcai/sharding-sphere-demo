@@ -11,6 +11,7 @@ public class ModuloShardingTableAlgorithm implements PreciseShardingAlgorithm<Lo
     public String doSharding(final Collection<String> tableNames, final PreciseShardingValue<Long> shardingValue) {
         for (String each : tableNames) {
             if (each.endsWith(shardingValue.getValue() % 2 + "")) {
+                System.out.println(each);
                 return each;
             }
         }
